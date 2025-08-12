@@ -7,39 +7,40 @@ type Props = {
   frameSize: number;
   itemWidth: number;
   animationDuration: number;
-  infinity: boolean;
+  infinite: boolean;
   onStepChange: (value: number) => void;
   onFrameSizeChange: (value: number) => void;
   onItemWidthChange: (value: number) => void;
   onAnimationDurationChange: (value: number) => void;
-  OnChangeInfinity: (infinityVal: boolean) => void;
+  OnChangeInfinite: (infiniteVal: boolean) => void;
 };
 const Form: React.FC<Props> = ({
   step,
   frameSize,
   itemWidth,
   animationDuration,
-  infinity,
+  infinite,
   onStepChange,
   onFrameSizeChange,
   onItemWidthChange,
   onAnimationDurationChange,
-  OnChangeInfinity,
+  OnChangeInfinite,
 }) => {
   return (
     <form className="Form">
       <label htmlFor="checkboxId" className="Form__label">
-        Infinity:
+        infinite:
       </label>
       <input
         id="checkboxId"
         type="checkbox"
+        checked={infinite}
         className="Form__checkbox"
         onChange={() => {
-          if (infinity) {
-            OnChangeInfinity(false);
+          if (infinite) {
+            OnChangeInfinite(false);
           } else {
-            OnChangeInfinity(true);
+            OnChangeInfinite(true);
           }
         }}
       />

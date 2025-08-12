@@ -1,9 +1,6 @@
 import './Carousel.scss';
 import { State } from '../../types/State';
-
-function findNumImage(image: string): number {
-  return +image.slice(image.lastIndexOf('/') + 1, image.lastIndexOf('.'));
-}
+import { useRef } from 'react';
 
 type CarouselProps = State & {
   onChangeoffSet: (offSet: number) => void;
@@ -22,13 +19,12 @@ const Carousel: React.FC<CarouselProps> = ({
   animationDuration,
   offSet,
   onChangeoffSet,
-  infinity,
+  infinite,
 }) => {
-  function scrolling(direction: ScrollDirections) {
-    const imagesList =
-      document.querySelector<HTMLUListElement>('.Carousel__list');
+  const listRef = useRef<HTMLUListElement>(null);
 
-    if (!imagesList) {
+  function scrolling(direction: ScrollDirections) {
+    if (!listRef.current) {
       return;
     }
 
@@ -38,7 +34,7 @@ const Carousel: React.FC<CarouselProps> = ({
     if (direction === ScrollDirections.next) {
       newOffset = offSet + step * itemWidth;
 
-      if (infinity) {
+      if (infinite) {
         if (newOffset > maxOffset) {
           newOffset = 0;
         }
@@ -50,7 +46,7 @@ const Carousel: React.FC<CarouselProps> = ({
     } else if (direction === ScrollDirections.prev) {
       newOffset = offSet - step * itemWidth;
 
-      if (infinity) {
+      if (infinite) {
         if (newOffset < 0) {
           newOffset = maxOffset;
         }
@@ -61,8 +57,8 @@ const Carousel: React.FC<CarouselProps> = ({
       }
     }
 
-    imagesList.style.transform = `translateX(-${newOffset}px)`;
-    imagesList.style.transition = `transform ${animationDuration}ms`;
+    listRef.current.style.transform = `translateX(-${newOffset}px)`;
+    listRef.current.style.transition = `transform ${animationDuration}ms`;
 
     onChangeoffSet(newOffset);
   }
@@ -72,10 +68,12 @@ const Carousel: React.FC<CarouselProps> = ({
       <button
         className="Carousel__button"
         type="button"
-        disabled={offSet === 0 && !infinity}
-        onClick={() => {
-          scrolling(ScrollDirections.prev);
-        }}
+        disabled={
+          (offSet === 0 && !infinite) ||
+          images.length <= frameSize ||
+          images.length <= step
+        }
+        onClick={() => scrolling(ScrollDirections.prev)}
       >
         Prev
       </button>
@@ -85,6 +83,7 @@ const Carousel: React.FC<CarouselProps> = ({
         style={{ width: frameSize * itemWidth + 'px' }}
       >
         <ul
+          ref={listRef}
           className="Carousel__list"
           style={{
             transition: `transform ${animationDuration}ms`,
@@ -93,7 +92,7 @@ const Carousel: React.FC<CarouselProps> = ({
           }}
         >
           {images.map(img => (
-            <li key={findNumImage(img)} className="Carousel__link">
+            <li key={img} className="Carousel__link">
               <img
                 src={img}
                 alt="1"
@@ -110,11 +109,11 @@ const Carousel: React.FC<CarouselProps> = ({
         type="button"
         data-cy="next"
         disabled={
-          offSet >= (images.length - frameSize) * itemWidth && !infinity
+          (offSet >= (images.length - frameSize) * itemWidth && !infinite) ||
+          images.length <= frameSize ||
+          images.length <= step
         }
-        onClick={() => {
-          scrolling(ScrollDirections.next);
-        }}
+        onClick={() => scrolling(ScrollDirections.next)}
       >
         Next
       </button>

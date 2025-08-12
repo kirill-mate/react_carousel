@@ -24,7 +24,7 @@ class App extends React.Component<{}, State> {
     itemWidth: 130,
     animationDuration: 1000,
     offSet: 0,
-    infinity: false,
+    infinite: false,
   };
 
   setStep = (newStep: number) => {
@@ -65,8 +65,8 @@ class App extends React.Component<{}, State> {
     this.setState({ offSet: offSet });
   };
 
-  setInfinity = (infinityVal: boolean) => {
-    this.setState({ infinity: infinityVal });
+  setInfinite = (infiniteVal: boolean) => {
+    this.setState({ infinite: infiniteVal });
   };
 
   render() {
@@ -87,7 +87,7 @@ class App extends React.Component<{}, State> {
           animationDuration={this.state.animationDuration}
           offSet={this.state.offSet}
           onChangeoffSet={this.setOffSet}
-          infinity={this.state.infinity}
+          infinite={this.state.infinite}
         />
 
         <Form
@@ -99,8 +99,8 @@ class App extends React.Component<{}, State> {
           onFrameSizeChange={this.setFrameSize}
           onItemWidthChange={this.setItemWidth}
           onAnimationDurationChange={this.setAnimationDuration}
-          infinity={this.state.infinity}
-          OnChangeInfinity={this.setInfinity}
+          infinite={this.state.infinite}
+          OnChangeInfinite={this.setInfinite}
         />
       </div>
     );

@@ -5,5 +5,5 @@ export interface State {
   itemWidth: number;
   animationDuration: number;
   offSet: number;
-  infinity: boolean;
+  infinite: boolean;
 }
