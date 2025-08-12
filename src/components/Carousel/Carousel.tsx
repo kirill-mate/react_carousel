@@ -22,6 +22,7 @@ const Carousel: React.FC<CarouselProps> = ({
   animationDuration,
   offSet,
   onChangeoffSet,
+  infinity,
 }) => {
   function scrolling(direction: ScrollDirections) {
     const imagesList =
@@ -31,19 +32,32 @@ const Carousel: React.FC<CarouselProps> = ({
       return;
     }
 
+    const maxOffset = (images.length - frameSize) * itemWidth;
     let newOffset = offSet;
 
     if (direction === ScrollDirections.next) {
       newOffset = offSet + step * itemWidth;
-      const maxOffset = (images.length - frameSize) * itemWidth;
 
-      if (newOffset > maxOffset) {
-        newOffset = maxOffset;
+      if (infinity) {
+        if (newOffset > maxOffset) {
+          newOffset = 0;
+        }
+      } else {
+        if (newOffset > maxOffset) {
+          newOffset = maxOffset;
+        }
       }
     } else if (direction === ScrollDirections.prev) {
       newOffset = offSet - step * itemWidth;
-      if (newOffset < 0) {
-        newOffset = 0;
+
+      if (infinity) {
+        if (newOffset < 0) {
+          newOffset = maxOffset;
+        }
+      } else {
+        if (newOffset < 0) {
+          newOffset = 0;
+        }
       }
     }
 
@@ -58,6 +72,7 @@ const Carousel: React.FC<CarouselProps> = ({
       <button
         className="Carousel__button"
         type="button"
+        disabled={offSet === 0 && !infinity}
         onClick={() => {
           scrolling(ScrollDirections.prev);
         }}
@@ -94,6 +109,9 @@ const Carousel: React.FC<CarouselProps> = ({
         className="Carousel__button"
         type="button"
         data-cy="next"
+        disabled={
+          offSet >= (images.length - frameSize) * itemWidth && !infinity
+        }
         onClick={() => {
           scrolling(ScrollDirections.next);
         }}
